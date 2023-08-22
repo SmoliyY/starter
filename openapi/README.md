@@ -1,5 +1,7 @@
 ## The `openapi` folder
 
+CHANGE README
+
 This folder contains your entrypoint `openapi.yaml`.
 
 That file contains references to the entire API definition.
