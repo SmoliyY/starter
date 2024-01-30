@@ -1,0 +1,14 @@
+name: Content-Type
+in: header
+schema:
+  type: string
+examples:
+  200:
+    value: application/json
+  201:
+    value: application/json
+  403:
+    value: application/json
+  404:
+    value: application/xml
+required: true

@@ -1,0 +1,39 @@
+post:
+  tags: 
+    -  Authorized access
+  x-internal: true
+  operationId: createAPIKey
+  summary: Create an API key for the organization.
+  parameters: 
+    - name: organization-id
+      in: path
+      required: true
+      schema: 
+        type: string
+      examples:
+        '201': 
+          value: 22
+        '403': 
+          value: 22
+    - name: permission
+      in: query
+      schema: 
+        enum: 
+          - admin
+          - user
+      examples:
+        '201': 
+          value: user
+        '403': 
+          value: user
+    - $ref: ../components/parameters/api-key.yaml
+  responses: 
+    201: 
+      description: Created
+      content: 
+        text/plain:
+          schema: 
+            type: string
+          example: test-api-key
+    403:
+      description: Forbidden

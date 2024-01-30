@@ -1,0 +1,14 @@
+name: X-Api-Key
+in: header 
+schema: 
+  type: string
+examples: 
+  200: 
+    value: eyJvcmdJZCI6InZhbGlkLWtleSJ9=
+  201: 
+    value: eyJvcmdJZCI6InZhbGlkLWtleSJ9=
+  403: 
+    value: invalid-test-api-key
+  404: 
+    value: valid-test-api-key
+required: true

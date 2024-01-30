@@ -1,0 +1,14 @@
+name: contentId
+in: path
+schema:
+  type: string
+examples:
+  200:
+    value: valid-content-id
+  403:
+    value: valid-content-id
+  404:
+    value: non-existing-item
+  400:
+    value: null
+required: true

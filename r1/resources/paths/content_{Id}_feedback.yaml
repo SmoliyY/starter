@@ -1,0 +1,45 @@
+get:
+  tags:
+    - Feedback Reference
+  summary: Get feedback by contentId and userId
+  description: |
+    Get a single feedback by contentId and userId
+  operationId: getContentFeedback
+  parameters:
+    - name: user
+      in: query
+      schema:
+        type: string
+      examples:
+        200:
+          value: valid-user-id
+        400:
+          value: 'null'
+        403:
+          value: valid-user-id
+        404:
+          value: invalid-user-id
+      required: true
+    - $ref: ../components/parameters/content-id.yaml
+  responses:
+    '200':
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/Feedback-with-id.yaml
+          example:
+            id: rere
+            feedback:
+              contentId: index-page
+              organizationId: test-org
+              rating: 5
+              suggestion: A suggestion.
+              sentiment: true
+              reason: one
+    '403':
+      description: Forbidden
+    '404':
+      description: Feedback not found
+    '400':
+      description: Bad request
