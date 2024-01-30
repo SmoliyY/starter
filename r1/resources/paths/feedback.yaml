@@ -1,0 +1,169 @@
+get:
+  tags:
+    - Feedback Reference
+  summary: Get feedback list
+  description: |
+    Return paginated feedback results
+  operationId: getFeedbackList
+
+  parameters:
+    - name: offset
+      in: query
+      schema:
+        type: integer
+      examples: 
+        200:
+          value: 0
+        403: 
+          value: 0
+        404: 
+          value: 0
+    - name: limit
+      in: query
+      schema:
+        type: integer
+      examples: 
+        200:
+          value: 10
+        403: 
+          value: 10
+        404: 
+          value: 10
+    - name: order
+      in: query
+      schema: 
+        description: Sorting options.
+        type: string
+        enum:
+          - recent
+          - oldest
+        default: recent
+      examples: 
+        200:
+          value: recent
+        403: 
+          value: recent
+        404: 
+          value: recent
+        # TODO: it should be like this (at least later):
+        # default: 
+        #   value: recent
+    - name: contentId
+      in: query
+      schema: 
+        type: string
+        description: The identifier of a content item. Unique per organization.
+      examples: 
+        200:
+          value: index-page
+        403: 
+          value: index-page
+        404:
+          value: non-existing-item
+    - $ref: ../components/parameters/api-key.yaml
+    - $ref: ../components/parameters/content-type.yaml
+  responses:
+    '200':
+      description: Success
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              items:
+                type: array
+                items:
+                  $ref: ../components/schemas/Feedback-with-id.yaml
+              offset: 
+                type: integer
+              limit: 
+                type: integer
+          examples:
+            positive:
+              value:
+                items: 
+                  - id: '1224124'
+                    feedback:
+                      contentId: index-page
+                      organizationId: test-org
+                      rating: 5
+                      suggestion: A suggestion.
+                      sentiment: true
+                      reason: one
+                  - id: '283949823'
+                    feedback:
+                      contentId: sales-page
+                      organizationId: test-org
+                      rating: 4
+                      suggestion: A suggestion.
+                      sentiment: true
+                      reason: two
+                limit: 50
+            negative:
+              value:
+                items: 
+                  - id: '123163'
+                    feedback:
+                      contentId: index-page
+                      organizationId: test-org
+                      rating: 1
+                      sentiment: false
+                      reason: two
+                limit: 10
+    '403':
+      description: Forbidden
+    '404':
+      description: User not found
+post:
+  tags:
+    - Feedback Reference
+  summary: Submit a feedback
+  description: Create or update (if one already exists for the organization, user and content) a feedback.
+  operationId: submitFeedback
+  responses:
+    '200':
+      description: Success
+      headers:
+        X-Rate-Limit:
+          description: calls per hour allowed by the user
+          schema:
+            type: integer
+            format: int32
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/Feedback-with-id.yaml
+          examples:
+            '200':
+              $ref: ../components/examples/feedback-with-id.yaml
+    '403': 
+      description: Forbidden
+  parameters: 
+    - in: header 
+      name: X-Api-Key
+      schema: 
+        type: string
+      examples: 
+        200: 
+          value: eyJvcmdJZCI6InZhbGlkLWtleSJ9=
+        201: 
+          value: eyJvcmdJZCI6InZhbGlkLWtleSJ9=
+        403: 
+          value: invalid-test-api-key
+        404: 
+          value: valid-test-api-key
+    - $ref: ../components/parameters/content-type.yaml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/Feedback.yaml
+        examples: 
+          '200':
+            $ref: ../components/examples/feedback.yaml
+          '400': 
+            $ref: ../components/examples/feedback.yaml
+          403:
+            $ref: ../components/examples/feedback.yaml
+
+    description: Feedback content

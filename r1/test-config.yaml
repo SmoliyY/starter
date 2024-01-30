@@ -1,0 +1,116 @@
+definition: ./resources/openapi.yaml
+
+defaults:
+  apiBase: "http://localhost:3003"
+  parameters:
+    - in: header
+      name: X-Api-Key
+      value:  ${secrets.TOKEN} # eyJvcmdJZCI6InZhbGlkLWtleSJ9= // TOKEN can be set as ENV variable
+    - in: header
+      name: content-type
+      value: application/json
+
+flows:
+  create-read-delete:
+    - name: addFeedback
+      path: /feedback
+      method: post
+
+      # inherit: auto
+      # parameters:
+      #   - in: header
+      #     name: auth_token
+          # value: 'Bearer: ${responses.login.body.token}'
+
+      requestBody:
+        contentId: index-page
+        rating: 5
+        suggestion: A suggestion.
+        sentiment: true
+        reason: one
+
+      expect:
+        status: 200 
+        mimeType: application/json; charset=utf-8
+        # body: ...
+        schema: # ${definition.paths./feedback.post.responses.200.content.application/json.schema}
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            feedback:
+              type: object
+              properties:
+                rating:
+                  type: integer
+                  maximum: 5
+                  minimum: 1
+                sentiment:
+                  type: boolean
+                reason:
+                  type: string
+                  enum:
+                    - one
+                    - two
+                suggestion:
+                  type: string
+                contentId:
+                  type: string
+                organizationId:
+                  type: string
+                userId:
+                  type: string
+                createdAt:
+                  type: string
+      assert: |
+        (expect, response) => {
+          expect(response.code).equal(200);
+        }
+        
+    - path: /feedback/{id}
+      name: getFeedback
+      method: get
+      parameters:
+        - in: path
+          name: id
+          value: ${responses.addFeedback.body.id}
+      expect:
+        status: 200
+      assert:
+        $ref: ./resources/custom-assertion.js
+
+    - path: /feedback/{id}
+      name: deleteFeedback
+      method: delete
+      parameters:
+        - in: path
+          name: id
+          value: ${responses.addFeedback.body.id}
+      expect:
+        status: 200
+
+    - path: /feedback/{id}
+      method: get
+      # wait: 30 // TODO consider to add
+      # repeat: 3  // TODO consider to add
+      parameters:
+        - in: path
+          name: id
+          value: ${responses.addFeedback.body.id}
+      expect:
+        status: 404
+
+  create-get-array:
+    - path: /feedback
+      method: post
+      inherit: auto
+      expect:
+        status: 200
+
+    - path: /feedback
+      method: get
+      inherit: auto
+      expect: 
+        status: 200
+        schema:  ${definition.paths./feedback.get.responses.200.content.application/json.schema}

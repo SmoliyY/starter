@@ -1,0 +1,12 @@
+name: id
+in: path
+schema:
+  type: integer
+examples: 
+  200:
+    value: valid-content-id
+  403:
+    value: valid-content-id
+  404: 
+    value: non-existing-item
+required: true

@@ -1,0 +1,10 @@
+value:
+  id: test-feedback-id
+  feedback:
+    contentId: index-page
+    organizationId: test-org
+    rating: 5
+    suggestion: A suggestion.
+    sentiment: true
+    reason: one
+# TODO: understand why refs aren't working here even with allOF

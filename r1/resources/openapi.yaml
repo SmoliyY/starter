@@ -1,0 +1,42 @@
+
+openapi: 3.0.0
+info:
+  version: 1.0.0cd .
+  title: Feedback API
+  termsOfService: 'https://example.com/terms/'
+  contact:
+    email: contact@example.com
+    url: 'http://example.com/contact'
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+  x-logo:
+    url: 'https://i1.sndcdn.com/artworks-000221014510-s7ahx3-t500x500.jpg'
+  description:
+    $ref: ./info-description.md
+tags:
+  - name: Feedback Reference
+    description: The list of API operations. 
+  - name: Authorized access
+    description: Internal.  
+servers:
+  - url: http://localhost:3000
+    description: Local development
+  - url: https://d29s8ee8lc7i23.cloudfront.net
+    description: Serverless development
+security: []
+paths:
+  /feedback:
+    $ref: 'paths/feedback.yaml'
+  '/feedback/{id}':
+    $ref: 'paths/feedback_{id}.yaml'
+  '/content/{contentId}/feedback':
+    $ref: 'paths/content_{Id}_feedback.yaml'
+  /organizations/{organization-id}/api-keys:
+    $ref: 'paths/organizations-api-keys.yaml'
+components:
+  securitySchemes:
+    api_key:
+      type: apiKey
+      in: header
+      name: api_key
